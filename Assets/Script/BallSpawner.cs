@@ -22,8 +22,6 @@ public class BallSpawner : MonoBehaviour
         }
     }
 
-
-
     private void SpawnBall()
     {
         Vector2 vector2 = Vector2.zero;

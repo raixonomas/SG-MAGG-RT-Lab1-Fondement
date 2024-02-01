@@ -12,5 +12,4 @@ public class Ball : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
 }

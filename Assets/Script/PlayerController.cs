@@ -7,10 +7,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-
-    [Header("Walk")]
     [SerializeField] private float speed = 7;
     [SerializeField] private float extraSpeedDecrease = 3;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator animator;
     private Vector2 movementInput;
     private Vector3 direction;
     private Vector3 inputVelocity;
@@ -23,12 +23,10 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         capsCollider = GetComponent<CapsuleCollider2D>();
-
     }
 
     private void FixedUpdate()
     {
-
         BuildHorizontalMovement();
         FollowCameraRotation();
         if (extraVelocity.magnitude > 0.2f)
@@ -40,9 +38,14 @@ public class PlayerController : MonoBehaviour
         rb.velocity = inputVelocity + extraVelocity;
     }
 
-    public void SetInputValue(InputAction.CallbackContext context)
+    public void SetMovementInputValue(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
+    }
+    public void SetAttackInputValue(InputAction.CallbackContext context)
+    {
+        if (context.ReadValue<float>() > 0.5f)
+            Attack();
     }
 
     private void BuildHorizontalMovement()
@@ -53,6 +56,14 @@ public class PlayerController : MonoBehaviour
         {
             direction = direction.x * transform.right + direction.z * transform.forward;
             direction *= speed;
+            if (direction.x > 0)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+            }
         }
         else
         {
@@ -72,8 +83,12 @@ public class PlayerController : MonoBehaviour
         Vector3 rotation = Camera.main.transform.rotation.eulerAngles;
         rotation.x = 0f;
         transform.rotation = Quaternion.Euler(rotation);
-
     }
 
+    private void Attack()
+    {
+        Debug.Log("HAYAAAA");
+        animator.SetTrigger("Attack");
+    }
 }
 
