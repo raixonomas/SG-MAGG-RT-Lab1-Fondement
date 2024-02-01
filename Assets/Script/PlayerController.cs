@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 extraVelocity;
     private Rigidbody2D rb;
     private CapsuleCollider2D capsCollider;
+    private bool canInput = true;
 
 
     private void Awake()
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     private void BuildHorizontalMovement()
     {
+        if (!canInput) return;
         direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
 
         if (direction.magnitude >= 0.2f)
@@ -67,11 +69,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            direction = Vector3.zero;
-            inputVelocity.x = 0;
-            inputVelocity.z = 0;
-            extraVelocity.x = 0;
-            extraVelocity.z = 0;
+            StopVelocity();
         }
         inputVelocity.x = direction.x;
         inputVelocity.z = direction.z;
@@ -85,10 +83,44 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotation);
     }
 
+    private void StopVelocity()
+    {
+        direction = Vector3.zero;
+        inputVelocity.x = 0;
+        inputVelocity.z = 0;
+        extraVelocity.x = 0;
+        extraVelocity.z = 0;
+    }
+
+    private IEnumerator StopAttackFor(float time)
+    {
+        canInput = false;
+        yield return new WaitForSeconds(time);
+        canInput = true;
+    }
+
     private void Attack()
     {
         Debug.Log("HAYAAAA");
         animator.SetTrigger("Attack");
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1);
+
+        if (colliders != null)
+        {
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider.gameObject != gameObject)
+                {
+                    Ball ball = collider.gameObject.GetComponent<Ball>();
+                    if (ball != null)
+                    {
+                        ball.HasBeenHit(rb.velocity);
+                        StopVelocity();
+                        StartCoroutine(StopAttackFor(0.2f));
+                    }
+                }
+            }
+        }
     }
 }
-
