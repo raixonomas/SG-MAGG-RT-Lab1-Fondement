@@ -87,4 +87,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.25
+    functionName: HitBall
+    data: 
+    objectReferenceParameter: {fileID: 460045772010508322, guid: 235c1e803cbc7c54c88fe70ea4b40dfc, type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
