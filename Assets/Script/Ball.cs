@@ -19,6 +19,11 @@ public class Ball : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        rb.rotation = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+    }
+
     public void HasBeenHit(Vector2 velocity)
     {
         Vector2 nextVelocity = rb.velocity;

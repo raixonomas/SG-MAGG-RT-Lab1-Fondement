@@ -103,7 +103,10 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("HAYAAAA");
         animator.SetTrigger("Attack");
+    }
 
+    public void HitBall()
+    {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 1);
 
         if (colliders != null)
